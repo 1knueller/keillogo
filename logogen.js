@@ -17,15 +17,26 @@ function paint(w, h) {
 
     // TEXT
     var text = s.text(0, 0, "KEIL");
-    text.attr({ "font-size": 18 });
-    var textbb = text.getBBox();
+    text.attr({
+        'font-size': w * 0.15,
+        'font-family': 'keilschrift'
+    });
+
     // TEXT padding
+    var textbb = text.getBBox();
     var tpadl = 0.05;
     var tpadb = 0.05;
-    text.attr({ x: w - textbb.width - w * tpadl, y: h - w * tpadb });
+    // pad bottom durch 2 weil die schriftart so eine hohe box verursacht
+    text.attr({ x: w - textbb.width - w * tpadl, y: h - w * (tpadb / 2) });
 
     var t = getTriangleWithMinArea(w, h);
-    var triangle = s.polyline(t.Ax, t.Ay, t.Bx, t.By, t.Cx, t.Cy);
+    var triangle = s.polygon(t.Ax, t.Ay, t.Bx, t.By, t.Cx, t.Cy);
+
+    triangle.attr({
+        fill: "none",
+        stroke: "#000",
+        strokeWidth: 4
+    });
 
     //textbb = text.getBBox();
 
