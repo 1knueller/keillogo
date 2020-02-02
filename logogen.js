@@ -10,10 +10,8 @@ function paint(w, h) {
     // debug rect
     s.rect(0, 0, w, h).attr({ fill: "#EEEEEE" });
 
-    var text = s.text(0, 0, "rötlicher KELI");
+    var text = s.text(0, 0, "KEIL");
     text.attr({ "font-size": 18 });
-
-    //font-family: 'Mukta', sans-serif;
 
     var textbb = text.getBBox();
     // text padding
@@ -22,9 +20,7 @@ function paint(w, h) {
     text.attr({ x: w - textbb.width - w * tpadl, y: h - w * tpadb });
 
     var t = getTriangleWithMinArea(w, h);
-    var triangle = s
-        .polygon(t.Ax, t.Ay, t.Bx, t.By, t.Cx, t.Cy)
-        .attr({ fill: "red" });
+    var triangle = s.polyline(t.Ax, t.Ay, t.Bx, t.By, t.Cx, t.Cy);
     textbb = text.getBBox();
 
     var x = textbb.x;
@@ -44,24 +40,21 @@ function getTriangleInRect(w, h) {
 }
 
 function getTriangleWithMinArea(w, h) {
-    while (true) {
-        var t = getTriangleInRect(w, h);
+    var t;
+    do {
+        t = getTriangleInRect(w, h);
+    } while (GetTriangleArea(t) < 100);
 
-        var A = Math.sqrt(
-            (t.Bx - t.Ax) * (t.Bx - t.Ax) + (t.By - t.Ay) * (t.By - t.Ay)
-        );
-        var B = Math.sqrt(
-            (t.Cx - t.Bx) * (t.Cx - t.Bx) + (t.Cy - t.By) * (t.Cy - t.By)
-        );
-        var C = Math.sqrt(
-            (t.Ax - t.Cx) * (t.Ax - t.Cx) + (t.Ay - t.Cy) * (t.Ay - t.Cy)
-        );
-        var side = (A + B + C) / 2;
-        area = Math.sqrt(side * (side - A) * (side - B) * (side - C));
-        if (area > 100)
-            // todo min area von faktor und w/h ableiten
-            return t;
-    }
+    return t;
+}
+
+function GetTriangleArea(t) {
+    var A = Math.sqrt((t.Bx - t.Ax) * (t.Bx - t.Ax) + (t.By - t.Ay) * (t.By - t.Ay));
+    var B = Math.sqrt((t.Cx - t.Bx) * (t.Cx - t.Bx) + (t.Cy - t.By) * (t.Cy - t.By));
+    var C = Math.sqrt((t.Ax - t.Cx) * (t.Ax - t.Cx) + (t.Ay - t.Cy) * (t.Ay - t.Cy));
+    var side = (A + B + C) / 2;
+    var area = Math.sqrt(side * (side - A) * (side - B) * (side - C));
+    return area;
 }
 
 generate();
