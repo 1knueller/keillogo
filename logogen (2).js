@@ -5,6 +5,10 @@ var lrcbox = document.getElementById("lockright");
 var llcbox = document.getElementById("lockleft");
 var afbox = document.getElementById("areafactor");
 
+
+
+
+
 function generate() {
     paint(192, 108);
 }
