@@ -4,25 +4,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
 </head>
 <body>
-    <div id="logodiv">
-    </div>
-    <svg id="logo" width="192" height="108">
-        <defs>
-
-        </defs>
-    </svg>
-    <br>
-    <button id="btngen" onclick="generate()">GEN</button>
-    <br>
-    <input type="checkbox" id="lockright" />lock right
-    <br>
-    <input type="checkbox" id="locktop" />lock top
-    <br>
-    <input type="checkbox" id="lockleft" />lock left
-    <br>
-    <input type="number" id="areafactor" min="0" max="1" step="0.01" value="0.15" />min area factor (0.5 = half area of rectangle)
-    <br>
-    <p id="dbg">Debug out</p>
+    <div id="logoGenerator"></div>
+    <div id="dynKeilLogoContainer"></div>
     <script type="text/javascript" src="logogen.js"></script>
 </body>
 </html>

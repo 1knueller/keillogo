@@ -1,15 +1,81 @@
-var ltcbox = document.getElementById("locktop");
-var lrcbox = document.getElementById("lockright");
-var llcbox = document.getElementById("lockleft");
-var afbox = document.getElementById("areafactor");
-
-function generate() {
+// this creates all the logos for the webpage into the placeholder
+function generateLogo() {
     paint(192, 108);
+
+    //var logos = document.getElementsByClassName("dynKeilLogoContainer");
+    //for (var l in logos) {
+    //    l.innerHTML = "";
+    //};
+}
+
+// this creates the logo generator into the placeholder
+function buildGenerator() {
+    var gen = document.getElementById("logoGenerator");
+    if (!gen)
+        return;
+
+    var ctrl = document.createElement("button");
+    ctrl.innerHTML = "Generate";
+    ctrl.addEventListener("click", function () {
+        generateLogo();
+    });
+    gen.appendChild(ctrl);
+    gen.appendChild(document.createElement('br'));
+
+
+    ctrl = document.createElement('input');
+    ctrl.type = "checkbox";
+    ctrl.name = "lockright";
+    ctrl.id = "lockright";
+    var label = document.createElement('label');
+    label.htmlFor = "lockright";
+    label.appendChild(document.createTextNode('lockright'));
+    gen.appendChild(ctrl);
+    gen.appendChild(label);
+    gen.appendChild(document.createElement('br'));
+
+    ctrl = document.createElement('input');
+    ctrl.type = "checkbox";
+    ctrl.name = "lockleft";
+    ctrl.id = "lockleft";
+    label = document.createElement('label');
+    label.htmlFor = "lockleft";
+    label.appendChild(document.createTextNode('lockleft'));
+    gen.appendChild(ctrl);
+    gen.appendChild(label);
+    gen.appendChild(document.createElement('br'));
+
+
+    ctrl = document.createElement('input');
+    ctrl.type = "checkbox";
+    ctrl.name = "locktop";
+    ctrl.id = "locktop";
+    label = document.createElement('label');
+    label.htmlFor = "locktop";
+    label.appendChild(document.createTextNode('locktop'));
+    gen.appendChild(ctrl);
+    gen.appendChild(label);
+    gen.appendChild(document.createElement('br'));
+
+
+    ctrl = document.createElement('input');
+    ctrl.type = "number";
+    ctrl.id = "areafactor";
+    ctrl.name = "areafactor";
+    ctrl.setAttribute("min", "0");
+    ctrl.setAttribute("max", "1");
+    ctrl.setAttribute("step", "0.01");
+    ctrl.setAttribute("value", "0.15");
+    label = document.createElement('label');
+    label.htmlFor = "areafactor";
+    label.appendChild(document.createTextNode('min area factor(0.5 = half area of rectangle)'));
+    gen.appendChild(ctrl);
+    gen.appendChild(label);
+    gen.appendChild(document.createElement('br'));
 }
 
 function paint(w, h) {
-    var draw = SVG().addTo('#logodiv').size(w, h);
-    draw.clear();
+    var draw = SVG().addTo('#dynKeilLogoContainer').size(w, h);
 
     // debug rect
     var rect = draw.rect(w, h).attr({ fill: '#EEEEEE' });
@@ -96,10 +162,15 @@ function isIntersecting(ax,ay, bx,by, cx,cy, dx,dy) {
     function CCW(ax, ay, bx, by, cx, cy) {
         return (cy - ay) * (bx - ax) > (by - ay) * (cx - ax);
     }
-    return (CCW(ax,ay, cx,cy, dx,dy) !== CCW(bx,by, cx,cy, dx,dy)) && (CCW(ax,ay, bx,by, cx,cy) !== CCW(ax,ay, bx,by, dx,dy));
+    return CCW(ax, ay, cx, cy, dx, dy) !== CCW(bx, by, cx, cy, dx, dy)
+        && CCW(ax, ay, bx, by, cx, cy) !== CCW(ax, ay, bx, by, dx, dy);
 }
 
 function getTriangleInRect(w, h) {
+    var ltcbox = document.getElementById("locktop");
+    var lrcbox = document.getElementById("lockright");
+    var llcbox = document.getElementById("lockleft");
+
     var top = 0;
     if (!(ltcbox && ltcbox.checked))
         top = Math.random() * h;
@@ -126,14 +197,15 @@ function getTriangleWithMinArea(w, h) {
     var t;
 
     var minarea = w * h * 0.15;
+    var afbox = document.getElementById("areafactor");
     if (afbox)
         minarea = w * h * afbox.value;
 
-    var i = 100;
+    var iTryAreas = 100;
     do {
         t = getTriangleInRect(w, h);
-        i--;
-    } while (GetTriangleArea(t) < minarea || i > 0);
+        iTryAreas--;
+    } while (GetTriangleArea(t) < minarea || iTryAreas > 0);
 
     return t;
 }
@@ -147,10 +219,5 @@ function GetTriangleArea(t) {
     return area;
 }
 
-function DoLinesIntersectLines() {
-
-}
-
-
-
-generate();
+buildGenerator();
+generateLogo();
