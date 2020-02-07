@@ -1,5 +1,3 @@
-var s = Snap("#paper");
-
 var ltcbox = document.getElementById("locktop");
 var lrcbox = document.getElementById("lockright");
 var llcbox = document.getElementById("lockleft");
@@ -60,7 +58,7 @@ function paint(w, h) {
         opacity: 0.5,
         "clip-path": "url(#clippy)",
         //"paint-order": "stroke",
-        "paint-order":"stroke fill markers",
+        "paint-order": "stroke fill markers",
     });
 
 

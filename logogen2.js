@@ -1,40 +1,33 @@
-var s = Snap("#paper");
-
 var ltcbox = document.getElementById("locktop");
 var lrcbox = document.getElementById("lockright");
 var llcbox = document.getElementById("lockleft");
 var afbox = document.getElementById("areafactor");
-
-
-
-
 
 function generate() {
     paint(192, 108);
 }
 
 function paint(w, h) {
-    s.clear();
+    var draw = SVG().addTo('#logodiv').size(w, h);
+    draw.clear();
 
     // debug rect
-    s.rect(0, 0, w, h).attr({ fill: "#EEEEEE" });
+    var rect = draw.rect(w, h).attr({ fill: '#EEEEEE' });
 
     // TEXT
-    var text = s.text(0, 0, "KEIL");
+    var text = draw.text("KEIL");
     text.attr({
         'font-size': w * 0.15,
         'font-family': 'keilschrift'
     });
-
-    // TEXT padding
-    var textbb = text.getBBox();
-    var tpadl = 0.05;
-    var tpadb = 0.05;
+    var textbb = text.bbox();
     // pad bottom durch 2 weil die schriftart so eine hohe box verursacht
-    text.attr({ x: w - textbb.width - w * tpadl, y: h - w * (tpadb / 2) });
+    text.attr({
+        x: w - textbb.width,
+        y: h - textbb.height
+    });
 
     var t = getTriangleWithMinArea(w, h);
-
     t = {
         Ax: 15,
         Ay: 15,
@@ -44,30 +37,22 @@ function paint(w, h) {
         Cy: 66
     };
 
-    var clippath = s.path(`M${t.Ax},${t.Ay} L${t.Bx},${t.By} L${t.Cx},${t.Cy} Z`);
+    var clippath = draw.path(`M${t.Ax},${t.Ay} L${t.Bx},${t.By} L${t.Cx},${t.Cy} Z`);
     clippath.attr({
         id: "clippy",
         fill: "red",
-        opacity: 0.5,
     });
-    clippath.toDefs();
-
-    var triangle = s.path(`M${t.Ax},${t.Ay} L${t.Bx},${t.By} L${t.Cx},${t.Cy} Z`);
-
+    
+    var triangle = draw.path(`M${t.Ax},${t.Ay} L${t.Bx},${t.By} L${t.Cx},${t.Cy} Z`);
     triangle.attr({
-        fill: "yellow",
+        fill: "none",
         stroke: "black",
-        strokeWidth: 8,
-        //"stroke-linecap": "butt",
-        //"stroke-linejoin": "miter",
-        //"stroke-miterlimit": 20
-        opacity: 0.5,
-        "clip-path": "url(#clippy)",
-        //"paint-order": "stroke",
-        "paint-order":"stroke fill markers",
+        'stroke-width': 8,
     });
 
-
+    var clip = draw.clip().add(clippath);
+    var final = triangle.clipWith(clip);
+    var bb = final.bbox(); // perfect box
 
 
     //style = ";;;stroke-dasharray:none;stroke-opacity:1"
