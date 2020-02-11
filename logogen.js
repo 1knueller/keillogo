@@ -57,6 +57,17 @@ function buildGenerator() {
     gen.appendChild(label);
     gen.appendChild(document.createElement('br'));
 
+    ctrl = document.createElement('input');
+    ctrl.type = "checkbox";
+    ctrl.name = "regen";
+    ctrl.id = "regen";
+    ctrl.checked = true;
+    label = document.createElement('label');
+    label.htmlFor = "regen";
+    label.appendChild(document.createTextNode('regenerate on text intersect'));
+    gen.appendChild(ctrl);
+    gen.appendChild(label);
+    gen.appendChild(document.createElement('br'));
 
     ctrl = document.createElement('input');
     ctrl.type = "number";
@@ -69,6 +80,21 @@ function buildGenerator() {
     label = document.createElement('label');
     label.htmlFor = "areafactor";
     label.appendChild(document.createTextNode('min area factor(0.5 = half area of rectangle)'));
+    gen.appendChild(ctrl);
+    gen.appendChild(label);
+    gen.appendChild(document.createElement('br'));
+
+    ctrl = document.createElement('input');
+    ctrl.type = "number";
+    ctrl.id = "maxareafactor";
+    ctrl.name = "maxareafactor";
+    ctrl.setAttribute("min", "0");
+    ctrl.setAttribute("max", "1");
+    ctrl.setAttribute("step", "0.01");
+    ctrl.setAttribute("value", "0.9");
+    label = document.createElement('label');
+    label.htmlFor = "maxareafactor";
+    label.appendChild(document.createTextNode('max area factor(0.5 = half area of rectangle) just to see what it looks like on the limit'));
     gen.appendChild(ctrl);
     gen.appendChild(label);
     gen.appendChild(document.createElement('br'));
@@ -138,8 +164,7 @@ function paint(w, h) {
 }
 
 // does not actually check boxes!!!! only top and left
-function isBoxIntersectingTriangle(textbb, t)
-{
+function isBoxIntersectingTriangle(textbb, t) {
     if (isIntersecting(textbb.x, textbb.y, textbb.x, textbb.y + textbb.height, t.Ax, t.Ay, t.Bx, t.By))
         return true;
     if (isIntersecting(textbb.x, textbb.y, textbb.x + textbb.width, textbb.y, t.Ax, t.Ay, t.Bx, t.By))
@@ -157,7 +182,7 @@ function isBoxIntersectingTriangle(textbb, t)
 }
 
 // https://stackoverflow.com/questions/9043805/test-if-two-lines-intersect-javascript-function
-function isIntersecting(ax,ay, bx,by, cx,cy, dx,dy) {
+function isIntersecting(ax, ay, bx, by, cx, cy, dx, dy) {
 
     function CCW(ax, ay, bx, by, cx, cy) {
         return (cy - ay) * (bx - ax) > (by - ay) * (cx - ax);
@@ -201,11 +226,18 @@ function getTriangleWithMinArea(w, h) {
     if (afbox)
         minarea = w * h * afbox.value;
 
-    var iTryAreas = 100;
+    var maxarea = w * h * 0.9;
+    var afbox2 = document.getElementById("maxareafactor");
+    if (afbox2)
+        maxarea = w * h * afbox2.value;
+
+    var iTryAreas = 1000;
+    var area = 0;
     do {
         t = getTriangleInRect(w, h);
         iTryAreas--;
-    } while (GetTriangleArea(t) < minarea || iTryAreas > 0);
+        area = GetTriangleArea(t);
+    } while (area < minarea || area > maxarea || iTryAreas > 0 );
 
     return t;
 }
