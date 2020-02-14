@@ -122,7 +122,7 @@ function paint(w, h) {
     // TEXT
     var text = draw.text("KEIL");
     text.attr({
-        'font-size': w * 0.15,
+        'font-size': w * 0.17,
         'font-family': 'keilschrift'
     });
     var textbb = text.bbox();
