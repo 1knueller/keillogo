@@ -1,9 +1,23 @@
+var svglist = [];
+
 function generateLogo() {
     var logocontainer = document.getElementById("dynKeilLogoContainer");
     logocontainer.innerHTML = "";
 
+    svglist = [];
+
     for (i = 0; i < 50; i++)
         paint(192, 108);
+}
+
+function exportLogos() {
+    var zip = new JSZip();
+    for (var i = 0; i < svglist.length; i++) {
+        zip.file(i+".svg", svglist[i].svg());
+    }
+    zip.generateAsync({ type: "blob" }).then(function (content) {
+        saveAs(content, "packerl.zip");
+    });
 }
 
 // this creates the logo generator into the placeholder
@@ -13,6 +27,14 @@ function buildGenerator() {
         return;
 
     var ctrl = document.createElement("button");
+    ctrl.innerHTML = "Export";
+    ctrl.addEventListener("click", function () {
+        exportLogos();
+    });
+    gen.appendChild(ctrl);
+    gen.appendChild(document.createElement('br'));
+
+    ctrl = document.createElement("button");
     ctrl.innerHTML = "Generate";
     ctrl.addEventListener("click", function () {
         generateLogo();
@@ -100,6 +122,8 @@ function paint(w, h) {
     // add to container from func
     var draw = SVG().addTo('#dynKeilLogoContainer')
         .size(w, h);
+
+    svglist.push(draw);
 
     //debug rect
     var rect = draw.rect(w, h).attr(
